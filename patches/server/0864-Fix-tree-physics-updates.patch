@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Rhagon <Rhagon1337@gmail.com>
+Date: Tue, 8 Feb 2022 14:12:32 +0100
+Subject: [PATCH] Fix tree physics updates
+
+
+diff --git a/src/main/java/net/minecraft/core/dispenser/DispenseItemBehavior.java b/src/main/java/net/minecraft/core/dispenser/DispenseItemBehavior.java
+index 098dd846fad6a22e6201f0d1ffbad66b8eef7ccf..1d170e9b79f5dfbeeafb5695831def6235b8e056 100644
+--- a/src/main/java/net/minecraft/core/dispenser/DispenseItemBehavior.java
++++ b/src/main/java/net/minecraft/core/dispenser/DispenseItemBehavior.java
+@@ -831,7 +831,7 @@ public interface DispenseItemBehavior {
+ 
+                     if (!fertilizeEvent.isCancelled()) {
+                         for (org.bukkit.block.BlockState blockstate : blocks) {
+-                            blockstate.update(true);
++                            blockstate.update(true, grewTree); //Paper
+                         }
+                     }
+                 }
+diff --git a/src/main/java/net/minecraft/world/item/ItemStack.java b/src/main/java/net/minecraft/world/item/ItemStack.java
+index 65fd2494393ff1bfc22272c8fd2f7434a3ed1f2e..0d6bec9b44715548b9eb144fdbf46b1edccddc43 100644
+--- a/src/main/java/net/minecraft/world/item/ItemStack.java
++++ b/src/main/java/net/minecraft/world/item/ItemStack.java
+@@ -364,7 +364,7 @@ public final class ItemStack {
+                         this.setCount(newCount);
+                     }
+                     for (BlockState blockstate : blocks) {
+-                        blockstate.update(true);
++                        blockstate.update(true, grewTree); //Paper
+                     }
+                 }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/block/SaplingBlock.java b/src/main/java/net/minecraft/world/level/block/SaplingBlock.java
+index ec4081974470f251554a1958f215c60a70dede7c..14903849596d21c8026e8ef26313541c75ceb847 100644
+--- a/src/main/java/net/minecraft/world/level/block/SaplingBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/SaplingBlock.java
+@@ -56,7 +56,7 @@ public class SaplingBlock extends BushBlock implements BonemealableBlock {
+                 }
+                 if (event == null || !event.isCancelled()) {
+                     for (BlockState blockstate : blocks) {
+-                        blockstate.update(true);
++                        blockstate.update(true, treeType != null); //Paper
+                     }
+                 }
+             }
